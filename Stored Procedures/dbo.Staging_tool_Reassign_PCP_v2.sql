@@ -28,7 +28,7 @@ AS
             @final_patients INT ,
             @final_sol_providers INT ,
             @limitpatient INT ,
-            @Medical_home UNIQUEIDENTIFIER ,
+            @Medical_home UNIQUEIDENTIFIER , -- What site are you currently working on? put site information
             @Dummy UNIQUEIDENTIFIER ,
             @switch INT ,
             @discover INT ,
@@ -38,8 +38,8 @@ AS
             @total_s2 INT;
 
         SET @switch = 0; -- should we reassign patients ?
-        SET @discover = 0;
-        SET @process = 1;
+        SET @discover = 0;--discover show more information 
+        SET @process = 1; --process of panel assiggment
 
 			
 			
@@ -247,7 +247,11 @@ VALUES  ( '0E16E96C-4320-4379-AC6F-011D90984197', 0.30, 'Spanish', 'R', 0 ), --S
                                             COUNT(*) AS QTY
                                     FROM    [10.183.0.94].NGProd.dbo.patient_encounter enc
                                             LEFT JOIN [10.183.0.94].NGProd.dbo.person per ON per.person_id = enc.person_id
-                                            LEFT JOIN [10.183.0.94].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id
+                                            LEFT JOIN [10.183.0.94].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id 
+											/*--person_ud table holds user defined fields, which is ud stands for.
+											so items which lifelong creates values for,not which has automatic values in Nextgen. 
+											It relates to the master list unique id to get the text value.
+											*/
                                     WHERE   enc.billable_ind = 'Y'
                                             AND DATEDIFF(MONTH, enc.billable_timestamp, GETDATE()) <= 18
                                             AND per.expired_ind != 'Y'
@@ -273,7 +277,7 @@ GROUP BY                pp.provider_id ,
 -- Total the number of FTE available for visits -- load to variable
 
 
-                SELECT  @tot_pcp_fte = COALESCE(SUM(data_control), 0)
+                SELECT  @tot_pcp_fte = COALESCE(SUM(data_control), 0)  -- R getting patient, G Giving patients, E -exclude from solution (but do not reassign patients that are assigned to them)
                 FROM    #Provider_Pool_temp1
                 WHERE   sol_ind IN ( 'R' );
 
@@ -1027,8 +1031,8 @@ ORDER BY ABS(CAST(CAST(NEWID() AS VARBINARY) AS INT));
             END;
 
 
-
-        IF @discover = 1
+		
+			IF @discover = 1
             BEGIN
                 SELECT  per.first_name ,
                         per.last_name ,

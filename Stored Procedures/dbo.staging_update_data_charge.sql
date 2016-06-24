@@ -5,7 +5,7 @@ GO
 -- =============================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
--- Description:	<Description,,>
+-- Description:	<Description,,Aging Report that how long charges is sitting >
 -- =============================================
 CREATE PROCEDURE [dbo].[staging_update_data_charge]
 
