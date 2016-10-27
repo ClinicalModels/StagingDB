@@ -37,7 +37,7 @@ AS
             @sub_pts INT ,
             @total_s2 INT;
 
-        SET @switch = 0; -- should we reassign patients ?
+        SET @switch = 1; -- Make the PCP assignment ?
         SET @discover = 0;--discover show more information 
         SET @process = 1; --process of panel assiggment
 
@@ -91,7 +91,7 @@ AS
 		*/
 	
 	
-	
+	/*
 
 			 SET @medical_home_name = '%West Berkeley%'
 		  SET @Medical_home = '131B16DE-F576-4028-AC08-158470F42599'; -- What site are you currently working on?
@@ -118,7 +118,7 @@ AS
 
 			
 						
-				
+		*/		
 	
 	/*
 	   
@@ -172,29 +172,35 @@ AS
                 ( '731EE947-823F-4E27-8429-8ED651C81416', 0.60, '', 'R', 0 ), --Norman Banks
                 ( '800E35A2-226E-42DD-8D05-E0BD03ED5989', 0.15, '', 'R', 0 ) --Wu
           
-
+*/
 
 --Over 60
 		  SET @medical_home_name = '%over 60%'
 		  SET @Medical_home = 'D1521C2F-3A7A-41FA-B5FA-7BBB0715A9D0'; -- What site are you currently working on?
           SET @Dummy = '7746F1A2-576A-42E9-6D91-6371AF7D5A25'; -- This is for using if you have a provider you want to accound for that has not arrived yet.
 
+		            INSERT  INTO #Provider_Pool
+                        ( provider_id, data_control, lang, sol_ind, limitpat )
 
-VALUES  ( '0E16E96C-4320-4379-AC6F-011D90984197', 0.30, 'Spanish', 'R', 0 ), --Searls
+VALUES          ( '0E16E96C-4320-4379-AC6F-011D90984197', 0.20, 'Spanish', 'E', 0 ), --Searls
                 ( 'AABE6BEC-2F02-4514-A146-07BF716CA8C3', 0.50, 'Chinese, Cantonese, Mandarin', 'R', 0 ), --Chen
-                ( '1BAC4E4E-7C06-417E-92BA-FE6BDD0EFFF0', 0.90, 'Spanish', 'R',100 ), --Elton
-                ( 'A8E7C0C1-C631-4DF2-AD2F-D3E7D67C729B', 0.60, 'French', 'R', 0 ), --ONeil
-                ( '6DCFBE83-D216-40F1-AB52-8E73A04C5783', 0.40, '', 'R', 0 ), --Mansalis
-                ( 'D0AD0360-204F-43D9-886C-71FBC8FF6D1D', 0.90, 'Spanish', 'E', 0 ), --Meadows
-                ( '269EFD50-7079-47F5-8AF3-4B2F5777409D', 0.30, '', 'E', 0 ), --Perisinotto
-                ( '7746F1A5-576A-42E9-8D91-6371AF785A25', 0.30, 'Spanish, Italian', 'R', 0 ), -- bernstein
+                ( 'D0AD0360-204F-43D9-886C-71FBC8FF6D1D', 0.80, 'Spanish', 'E', 0 ), --Meadows
+                ( '1BAC4E4E-7C06-417E-92BA-FE6BDD0EFFF0', 0.80, 'Spanish', 'E',0 ), --Elton
+                ( '7127F525-D855-46CB-9CD0-CD56CB51EFAC', 0.80, '', 'R', 0 ) , -- Denise Scholz
+			    ( 'A8E7C0C1-C631-4DF2-AD2F-D3E7D67C729B', 0.60, 'French', 'E', 0 ), --ONeil
+                ( '6DCFBE83-D216-40F1-AB52-8E73A04C5783', 0.40, '', 'E', 0 ), --Mansalis
+
+                ( '269EFD50-7079-47F5-8AF3-4B2F5777409D', 0.20, '', 'E', 0 ), --Perisinotto
+                ( '7746F1A5-576A-42E9-8D91-6371AF785A25', 0.30, 'Spanish, Italian', 'E', 0 ), -- Bernstein
                 ( 'FE225410-4D0C-48EC-BEF2-2F1D2FF0B546', 0.20, '', 'E', 0 ), --Zelma, Lewis
-                ( '0AE37A15-564F-4FA0-BBFC-2C1D01F4374F', 0.60, '', 'R', 0), -- Oveson
+                ( '16C91752-5FFE-437A-AFB9-28E79BAE6CEE', 0.20, '', 'E', 0 ) , -- Joan King Angel
+	
+			--	( '0AE37A15-564F-4FA0-BBFC-2C1D01F4374F', 0.60, '', 'R', 0), -- Oveson
 				( 'C3EA3F29-846F-4DD8-85DE-4F46417A9BCA', 0.60, '', 'E', 0)  -- Sue Londerville
 
 
 
-
+/*
 
 		  SET @medical_home_name = '%ashby%'
 		  SET @Medical_home = '8125418E-7B63-4D4C-901B-63C0BFE95A53'; -- What site are you currently working on?
@@ -215,10 +221,9 @@ VALUES  ( '0E16E96C-4320-4379-AC6F-011D90984197', 0.30, 'Spanish', 'R', 0 ), --S
 						( 'C1F69800-D3E3-4A85-8DBD-95E2C51BAAF2', 0.12, '', 'E', 0 ) --Marusczak NP, Melanie;
 
 
-
-
-
 */
+
+
 
 
 
@@ -245,9 +250,9 @@ VALUES  ( '0E16E96C-4320-4379-AC6F-011D90984197', 0.30, 'Spanish', 'R', 0 ), --S
                                             per.primarycare_prov_id ,
                                             ud.ud_demo3_id ,
                                             COUNT(*) AS QTY
-                                    FROM    [10.183.0.94].NGProd.dbo.patient_encounter enc
-                                            LEFT JOIN [10.183.0.94].NGProd.dbo.person per ON per.person_id = enc.person_id
-                                            LEFT JOIN [10.183.0.94].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id 
+                                    FROM    [10.183.0.64].NGProd.dbo.patient_encounter enc
+                                            LEFT JOIN [10.183.0.64].NGProd.dbo.person per ON per.person_id = enc.person_id
+                                            LEFT JOIN [10.183.0.64].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id 
 											/*--person_ud table holds user defined fields, which is ud stands for.
 											so items which lifelong creates values for,not which has automatic values in Nextgen. 
 											It relates to the master list unique id to get the text value.
@@ -260,7 +265,7 @@ VALUES  ( '0E16E96C-4320-4379-AC6F-011D90984197', 0.30, 'Spanish', 'R', 0 ), --S
                                             per.primarycare_prov_id ,
                                             ud.ud_demo3_id
                                   ) per ON pp.provider_id = per.primarycare_prov_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.provider_mstr prov ON pp.provider_id = prov.provider_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.provider_mstr prov ON pp.provider_id = prov.provider_id
                 WHERE   ( per.QTY >= 0
                           OR per.QTY IS NULL
                         )
@@ -307,9 +312,9 @@ GROUP BY                pp.provider_id ,
                         per.primarycare_prov_id ,
                         COUNT(*) AS QTY
                 INTO    #unassigned_patients
-                FROM    [10.183.0.94].NGProd.dbo.patient_encounter enc
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.person per ON per.person_id = enc.person_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id
+                FROM    [10.183.0.64].NGProd.dbo.patient_encounter enc
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.person per ON per.person_id = enc.person_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id
                 WHERE   enc.billable_ind = 'Y'
                         AND per.expired_ind != 'Y'
                         AND DATEDIFF(MONTH, enc.billable_timestamp, GETDATE()) <= 18
@@ -455,9 +460,9 @@ GROUP BY                per.person_id ,
                                                         per.primarycare_prov_id ,
                                                         ud.ud_demo3_id ,
                                                         COUNT(*) AS QTY
-                                                FROM    [10.183.0.94].NGProd.dbo.patient_encounter enc
-                                                        LEFT JOIN [10.183.0.94].NGProd.dbo.person per ON per.person_id = enc.person_id
-                                                        LEFT JOIN [10.183.0.94].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id
+                                                FROM    [10.183.0.64].NGProd.dbo.patient_encounter enc
+                                                        LEFT JOIN [10.183.0.64].NGProd.dbo.person per ON per.person_id = enc.person_id
+                                                        LEFT JOIN [10.183.0.64].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id
                                                 WHERE   enc.billable_ind = 'Y'
                                                         AND DATEDIFF(MONTH, enc.billable_timestamp, GETDATE()) <= 18
                                                         AND per.expired_ind != 'Y'
@@ -466,7 +471,7 @@ GROUP BY                per.person_id ,
                                                         per.primarycare_prov_id ,
                                                         ud.ud_demo3_id
                                               ) per ON pp.provider_id = per.primarycare_prov_id
-                                    LEFT JOIN [10.183.0.94].NGProd.dbo.provider_mstr prov ON pp.provider_id = prov.provider_id
+                                    LEFT JOIN [10.183.0.64].NGProd.dbo.provider_mstr prov ON pp.provider_id = prov.provider_id
                           WHERE     ( per.QTY > 0
                                       OR pp.provider_id = @Dummy
                                     ) -- Include dummy provider here
@@ -491,7 +496,7 @@ GROUP BY                per.person_id ,
                         LEFT JOIN ( SELECT  ec.person_id ,
                                             ec.rendering_provider_id
                                     FROM    #final_solution fs
-                                            INNER JOIN [10.183.0.94].NGProd.dbo.patient_encounter ec ON fs.provider_id = ec.rendering_provider_id
+                                            INNER JOIN [10.183.0.64].NGProd.dbo.patient_encounter ec ON fs.provider_id = ec.rendering_provider_id
                                     WHERE   ec.billable_ind = 'Y'
                                             AND DATEDIFF(MONTH, ec.billable_timestamp, GETDATE()) <= 18
                                   ) enc ON enc.person_id = pc.person_id
@@ -514,7 +519,7 @@ GROUP BY                per.person_id ,
                         ABS(CAST(CAST(NEWID() AS VARBINARY) AS INT)) AS ran_num
                 INTO    #final_patient_list
                 FROM    #prov_enc_pat2 penc
-                        INNER JOIN [10.183.0.94].NGProd.dbo.person per ON per.person_id = penc.person_id
+                        INNER JOIN [10.183.0.64].NGProd.dbo.person per ON per.person_id = penc.person_id
                 WHERE   seq = 1;
 
 
@@ -854,9 +859,9 @@ ORDER BY ABS(CAST(CAST(NEWID() AS VARBINARY) AS INT));
                         mp.how_status
                 INTO    #matched_sub
                 FROM    #Matched_patient mp
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.patient pat ON mp.person_id = pat.person_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.person per ON per.person_id = pat.person_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.provider_mstr prov ON mp.provider_id = prov.provider_id;
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.patient pat ON mp.person_id = pat.person_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.person per ON per.person_id = pat.person_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.provider_mstr prov ON mp.provider_id = prov.provider_id;
 
 	
 
@@ -881,10 +886,10 @@ ORDER BY ABS(CAST(CAST(NEWID() AS VARBINARY) AS INT));
                         COALESCE(per.alt_phone, '') AS alt_phone
                 INTO    #matched_final
                 FROM    #matched_sub ms
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.person per ON ms.person_id = per.person_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.provider_mstr prov ON per.primarycare_prov_id = prov.provider_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.person_ud ud ON per.person_id = ud.person_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.mstr_lists ml ON ud.ud_demo3_id = ml.mstr_list_item_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.person per ON ms.person_id = per.person_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.provider_mstr prov ON per.primarycare_prov_id = prov.provider_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.person_ud ud ON per.person_id = ud.person_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.mstr_lists ml ON ud.ud_demo3_id = ml.mstr_list_item_id
                 WHERE   ms.provider_id IS NOT NULL AND  ms.provider_id !=@Dummy;
               
                 
@@ -909,12 +914,12 @@ ORDER BY ABS(CAST(CAST(NEWID() AS VARBINARY) AS INT));
                         SET @practice_id = '0001';
                         SET @user_id = '0';
 
-                        UPDATE  [10.183.0.94].NGProd.dbo.person
+                        UPDATE  [10.183.0.64].NGProd.dbo.person
                         SET     per.primarycare_prov_id = mf.new_provider_id ,
                                 per.primarycare_prov_name = mf.new_provider_name ,
                                 per.modified_by = @user_id ,
                                 per.modify_timestamp = GETDATE()
-                        FROM    [10.183.0.94].NGProd.dbo.person per
+                        FROM    [10.183.0.64].NGProd.dbo.person per
                                 INNER JOIN #matched_final mf ON mf.person_id = per.person_id;
 
 
@@ -923,7 +928,7 @@ ORDER BY ABS(CAST(CAST(NEWID() AS VARBINARY) AS INT));
     -- Insert changes into sig_events table
        
         
-                        INSERT  INTO [10.183.0.94].NGProd.dbo.sig_events
+                        INSERT  INTO [10.183.0.64].NGProd.dbo.sig_events
                                 ( sig_event_id ,
                                   enterprise_id ,
                                   practice_id ,
@@ -972,13 +977,13 @@ ORDER BY ABS(CAST(CAST(NEWID() AS VARBINARY) AS INT));
                                 per.primarycare_prov_name ,
                                 per.modified_by ,
                                 per.modify_timestamp
-                        FROM    [10.183.0.94].NGProd.dbo.person per
+                        FROM    [10.183.0.64].NGProd.dbo.person per
                         WHERE   CAST(per.modify_timestamp AS DATE) = CAST(GETDATE() AS DATE);
 
 
 
                         SELECT  *
-                        FROM    [10.183.0.94].NGProd.dbo.sig_events per
+                        FROM    [10.183.0.64].NGProd.dbo.sig_events per
                         WHERE   CAST(per.modify_timestamp AS DATE) = CAST(GETDATE() AS DATE);
 
 
@@ -1041,12 +1046,12 @@ ORDER BY ABS(CAST(CAST(NEWID() AS VARBINARY) AS INT));
                         ud.ud_demo3_id AS medical_home_id ,
                         ml.mstr_list_item_desc AS medical_home_name ,
                         prov.description AS Current_provider_name
-                FROM    [10.183.0.94].NGProd.dbo.person per
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.provider_mstr prov ON per.primarycare_prov_id = prov.provider_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id
-                        LEFT JOIN [10.183.0.94].NGProd.dbo.[mstr_lists] ml ON ud.ud_demo3_id = ml.mstr_list_item_id
+                FROM    [10.183.0.64].NGProd.dbo.person per
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.provider_mstr prov ON per.primarycare_prov_id = prov.provider_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.[person_ud] ud ON per.person_id = ud.person_id
+                        LEFT JOIN [10.183.0.64].NGProd.dbo.[mstr_lists] ml ON ud.ud_demo3_id = ml.mstr_list_item_id
          
-		       WHERE   ml.mstr_list_item_desc LIKE '%Ashby%' AND per.primarycare_prov_name LIKE '%Gurinder%'
+		       WHERE   ml.mstr_list_item_desc LIKE '%Over%'-- AND per.primarycare_prov_name LIKE '%Gurinder%'
          
 		 
 		 --       WHERE   ml.mstr_list_item_desc LIKE @medical_home_name
